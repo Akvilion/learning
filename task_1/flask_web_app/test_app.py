@@ -9,7 +9,7 @@ class FlaskTestCase(unittest.TestCase):
 
     def test_hello_world(self):
         rv = self.app.get('/')
-        self.assertEqual(rv.data, b'Hello, World!')
+        self.assertEqual(rv.data, b'Hello, World!111')
 
 if __name__ == '__main__':
     unittest.main()
