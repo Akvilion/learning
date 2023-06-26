@@ -72,6 +72,7 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 643623638664.dkr.ecr.us-east-1.amazonaws.com
           docker stop my_flask_app || true
           docker rm my_flask_app || true
           docker pull 643623638664.dkr.ecr.us-east-1.amazonaws.com/learning:x1
