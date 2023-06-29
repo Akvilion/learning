@@ -70,7 +70,7 @@ jobs:
 
     - name: Store data in AWS SSM
       run: |
-        aws ssm put-parameter --name "/my-app/key" --value ${{ env.EC2_IP }} --type "SecureString"
+        aws ssm put-parameter --name "/my-app/key" --value ${{ env.EC2_IP }} --type "SecureString" --overwrite
 
 
   build-and-test:
@@ -156,9 +156,9 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           sudo apt update && sudo apt install -y awscli || true
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID  || true
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY  || true
-          aws configure set default.region $AWS_REGION  || true
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}         
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 643623638664.dkr.ecr.us-east-1.amazonaws.com  || true
           docker stop my_flask_app || true
           docker rm my_flask_app || true
