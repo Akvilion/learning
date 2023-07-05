@@ -62,17 +62,17 @@ resource "aws_security_group" "learning" {
   }
 }
 
-resource "aws_ecr_repository" "ecr_instance" {
-  name                 = "learning"
-  image_tag_mutability = "MUTABLE"
+# resource "aws_ecr_repository" "ecr_instance" {
+#   name                 = "learning"
+#   image_tag_mutability = "MUTABLE"
 
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-  lifecycle {
-    ignore_changes = all
-  }
-}
+#   image_scanning_configuration {
+#     scan_on_push = true
+#   }
+#   lifecycle {
+#     ignore_changes = all
+#   }
+# }
 
 resource "aws_ecr_lifecycle_policy" "learningpolicy" {
   repository = aws_ecr_repository.ecr_instance.name
@@ -82,12 +82,12 @@ resource "aws_ecr_lifecycle_policy" "learningpolicy" {
     "rules": [
         {
             "rulePriority": 1,
-            "description": "Expire images older than 2 days",
+            "description": "Expire images older than 1 days",
             "selection": {
                 "tagStatus": "untagged",
                 "countType": "sinceImagePushed",
                 "countUnit": "days",
-                "countNumber": 2
+                "countNumber": 1
             },
             "action": {
                 "type": "expire"
@@ -98,11 +98,8 @@ resource "aws_ecr_lifecycle_policy" "learningpolicy" {
 EOF
 }
 
-output "ec2_ip" {
-  value       = aws_instance.learning.public_ip
-  description = "The public IP of the EC2 instance"
-}
+# output "ec2_ip" {
+#   value       = aws_instance.learning.public_ip
+#   description = "The public IP of the EC2 instance"
+# }
 
-# terraform init
-# terraform plan
-# terraform apply
