@@ -37,8 +37,8 @@ EOF
 }
 
 resource "aws_security_group" "learning2" {
-  name        = "WebServerSecurityGroup"
-  description = "My first SG"
+  name        = "WebServerSecurityGroup2"
+  description = "My first SG2"
 
   ingress {
     from_port   = 80
