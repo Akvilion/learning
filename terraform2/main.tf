@@ -21,7 +21,7 @@ provider "aws" {
 resource "aws_instance" "learning" {
   ami                    = "ami-053b0d53c279acc90"
   instance_type          = "t2.micro"
-  key_name               = "ubuntu"
+  key_name               = "4820006"
   vpc_security_group_ids = [aws_security_group.learning.id]
 
   tags = {
