@@ -51,10 +51,10 @@ jobs:
       continue-on-error: true
       working-directory: ./terraform1
   
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply -auto-approve -input=false
-      working-directory: ./terraform1
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: terraform apply -auto-approve -input=false
+    #   working-directory: ./terraform1
 
 
 
@@ -100,7 +100,7 @@ jobs:
       continue-on-error: true
       working-directory: ./terraform2
   
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply -auto-approve -input=false
-      working-directory: ./terraform2
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: terraform apply -auto-approve -input=false
+    #   working-directory: ./terraform2

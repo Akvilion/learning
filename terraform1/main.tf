@@ -19,11 +19,11 @@ provider "aws" {
 }
 
 
-resource "aws_instance" "learning" {
+resource "aws_instance" "learning1" {
   ami                    = "ami-053b0d53c279acc90"
   instance_type          = "t2.micro"
   key_name               = "4820006"
-  vpc_security_group_ids = [aws_security_group.learning.id]
+  vpc_security_group_ids = [aws_security_group.learning1.id]
 
   tags = {
     Name = "one"
@@ -37,7 +37,7 @@ resource "aws_instance" "learning" {
 EOF
 }
 
-resource "aws_security_group" "learning" {
+resource "aws_security_group" "learning1" {
   name        = "WebServerSecurityGroup"
   description = "My first SG"
 
