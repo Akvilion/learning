@@ -25,7 +25,7 @@ resource "aws_instance" "learning" {
   vpc_security_group_ids = [aws_security_group.learning.id]
 
   tags = {
-    Name = "learning"
+    Name = "two"
   }
   user_data = <<-EOF
     #!/bin/bash
