@@ -18,8 +18,6 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-provider "docker" {}
-
 # #################################################################
 # resource "aws_instance" "learning2" {
 #   ami                    = "ami-053b0d53c279acc90"
