@@ -149,6 +149,20 @@ EOF
 #################################################################ECS
 
 
+resource "aws_instance" "web" {
+  ami           = "ami-06b09bfacae1453cb"
+  instance_type = "t2.micro"
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo ECS_CLUSTER=${aws_ecs_cluster.mycluster.name} >> /etc/ecs/ecs.config
+              EOF
+
+  tags = {
+    Name = "ec2-ecs-instance"
+  }
+}
+
 
 # згідно інструкції на сайті https://aws.plainenglish.io/creating-an-ecs-cluster-with-terraform-edf6fd3b822
 resource "aws_ecs_cluster" "mycluster" {
