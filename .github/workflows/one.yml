@@ -75,6 +75,9 @@ jobs:
     needs: build_amd_test
     runs-on: ubuntu-latest
     steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
     
     - name: Build, tag, and push image to Amazon ECR
       env:
