@@ -18,6 +18,8 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+provider "docker" {}
+
 # #################################################################
 # resource "aws_instance" "learning2" {
 #   ami                    = "ami-053b0d53c279acc90"
@@ -143,3 +145,61 @@ resource "aws_ecr_lifecycle_policy" "learningpolicy" {
 EOF
 }
 #################################################################
+
+
+
+#################################################################ECS
+
+
+
+# згідно інструкції на сайті https://aws.plainenglish.io/creating-an-ecs-cluster-with-terraform-edf6fd3b822
+resource "aws_ecs_cluster" "mycluster" {
+  name = "mycluster"
+
+  setting {
+      name  = "containerInsights"
+      value = "enabled"
+    }
+}
+
+resource "aws_ecs_task_definition" "task" {
+  family                   = "service"
+  requires_compatibilities = ["EC2"]
+  container_definitions    = <<TASK_DEFINITION
+  [
+    {
+      "name"      : "learning_service",
+      "image"     : "957271766300.dkr.ecr.us-east-1.amazonaws.com/devops_course:latest",
+      "cpu"       : 512,
+      "memory"    : 1024,
+      "essential" : true,
+      "portMappings" : [
+        {
+          "containerPort" : 5000,
+          "hostPort"      : 5000
+        }
+      ]
+    }
+  ]
+  TASK_DEFINITION
+}
+
+resource "aws_ecs_service" "service" {
+  name             = "service"
+  cluster          = aws_ecs_cluster.mycluster.id
+  task_definition  = aws_ecs_task_definition.task.id
+  desired_count    = 1
+}
+
+
+
+
+
+
+
+
+######################### OUTPUTS #########################
+output "ecs_cluster_arn" {
+  description = "The ARN of the ECS Cluster"
+  value       = aws_ecs_cluster.mycluster.arn
+}

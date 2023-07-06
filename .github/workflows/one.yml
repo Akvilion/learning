@@ -57,7 +57,7 @@ jobs:
       working-directory: ./terraform
 
 
-  build_amd_test:
+  build_and_test:
     needs: create_ecr_repo
     runs-on: ubuntu-latest
     steps:
@@ -71,38 +71,39 @@ jobs:
       run: docker run --name flask-app user/app:latest python -m unittest test_app
 
 
-  push_image_to_ecr:
-    needs: build_amd_test
-    runs-on: ubuntu-latest
-    steps:
+  # push_image_to_ecr:
+  #   needs: build_amd_test
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-    - name: Checkout repository
-      uses: actions/checkout@v3
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+  #   - name: Configure AWS credentials
+  #     uses: aws-actions/configure-aws-credentials@v1
+  #     with:
+  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1    
+  #   - name: Login to Amazon ECR
+  #     id: login-ecr
+  #     uses: aws-actions/amazon-ecr-login@v1    
     
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG task_1/flask_web_app/
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  #   - name: Build, tag, and push image to Amazon ECR
+  #     env:
+  #       ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  #       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  #       IMAGE_TAG: latest
+  #     run: |
+  #       docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG task_1/flask_web_app/
+  #       docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
 
   create_ecs_cluster:
     runs-on: ubuntu-latest
-    needs: push_image_to_ecr
+    needs: build_and_test
+    # needs: push_image_to_ecr
     
     steps:
     - name: Checkout repository
@@ -142,7 +143,7 @@ jobs:
       continue-on-error: true
       working-directory: ./terraform2
   
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply -auto-approve -input=false
-      working-directory: ./terraform2
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: terraform apply -auto-approve -input=false
+    #   working-directory: ./terraform2
