@@ -86,7 +86,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
 
-  crete_ecs_cluster:
+  create_ecs_cluster:
     runs-on: ubuntu-latest
     needs: push_image_to_ecr
     
