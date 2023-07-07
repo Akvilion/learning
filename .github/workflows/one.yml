@@ -72,7 +72,7 @@ jobs:
 
 
   push_image_to_ecr:
-    needs: build_amd_test
+    needs: build_and_test
     runs-on: ubuntu-latest
     steps:
 
