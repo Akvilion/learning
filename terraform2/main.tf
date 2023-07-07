@@ -147,6 +147,9 @@ EOF
 
 
 #################################################################ECS
+
+# Гайд -> https://earthly.dev/blog/deploy-dockcontainers-to-awsecs-using-terraform/
+
 resource "aws_ecs_cluster" "my_cluster" {
   name = "app-cluster" # Name your cluster here
 }
@@ -267,7 +270,7 @@ resource "aws_ecs_service" "app_service" {
   cluster         = aws_ecs_cluster.my_cluster.id        # Reference the created Cluster
   task_definition = aws_ecs_task_definition.app_task.arn # Reference the task that the service will spin up
   launch_type     = "FARGATE"
-  desired_count   = 3 # Set up the number of containers to 3
+  desired_count   = 2 # Set up the number of containers to 3
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn # Reference the target group
@@ -303,3 +306,30 @@ output "app_url" {
   value = aws_alb.application_load_balancer.dns_name
 }
 
+########################## metrics.tf ############################
+
+resource "aws_cloudwatch_metric_alarm" "ECS_CPU_Usage_Alarm" {
+  alarm_name          = "ECS_CPU_Usage_Alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+
+  metric_name         = "CPUUtilization" # ActiveConnectionCount
+  namespace           = "AWS/ECS"
+  period              = "300"
+  evaluation_periods  = "5"
+  datapoints_to_alarm = "3" # якщо три 3 з 5 вище порогу то відправляємо алерт
+  statistic           = "Average"
+  threshold           = "70"
+  alarm_description   = "This metric monitors ecs cpu utilization exceeding 70%"
+  alarm_actions       = [aws_sns_topic.alarms.arn]
+}
+
+
+resource "aws_sns_topic" "alarms" {
+  name = "alarms"
+}
+
+resource "aws_sns_topic_subscription" "email_subscription" {
+  topic_arn = aws_sns_topic.alarms.arn
+  protocol  = "email"
+  endpoint  = "codeorion12@gmail.com"
+}
