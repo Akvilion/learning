@@ -318,8 +318,8 @@ resource "aws_cloudwatch_metric_alarm" "ECS_CPU_Usage_Alarm" {
   evaluation_periods  = "5"
   datapoints_to_alarm = "3" # якщо три 3 з 5 вище порогу то відправляємо алерт
   statistic           = "Average"
-  threshold           = "70"
-  alarm_description   = "This metric monitors ecs cpu utilization exceeding 70%"
+  threshold           = "5"
+  alarm_description   = "This metric monitors ecs cpu utilization exceeding 5%"
   alarm_actions       = [aws_sns_topic.alarms.arn]
 }
 
